@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>波動・聲學・幾何光學 互動教學系統</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#09090B radial-gradient(ellipse 70% 480px at 50% -80px,rgba(99,102,241,.28),rgba(99,102,241,.06) 60%,transparent) no-repeat;color:#A1A1AA;font:15px/1.7 Inter,"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.hero{text-align:center;padding:96px 20px 72px;max-width:820px;margin:auto}
+.hero .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);backdrop-filter:blur(12px);border-radius:999px;padding:5px 14px;font-size:12px;color:#A1A1AA;margin-bottom:24px}
+.hero h2{font-size:clamp(32px,6vw,60px);line-height:1.1;letter-spacing:-.04em;font-weight:700;margin:0 0 20px;background:linear-gradient(180deg,#fff 30%,#71717a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0 auto;max-width:560px;font-size:16px;color:#A1A1AA}
+svg.ic{width:18px;height:18px;stroke:#a5b4fc;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(9,9,11,.6);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:8px;padding:12px 20px;flex-wrap:wrap;align-items:center}
+header h1{font-size:14px;margin:0 auto 0 0;font-weight:600;letter-spacing:-.02em;color:#fafafa;display:flex;gap:8px;align-items:center}
+.tab,.b{background:rgba(255,255,255,.05);color:#d4d4d8;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer;transition:all .3s ease-out}
+.tab:hover,.b:hover{transform:translateY(-2px);background:rgba(255,255,255,.09);box-shadow:0 6px 24px -6px rgba(129,140,248,.45);border-color:rgba(165,180,252,.35)}
+.tab.on,.b.on{background:#fafafa;color:#09090B;font-weight:600}
+main{max-width:1180px;margin:auto;padding:0 20px 96px}
+.part{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+#p1>:nth-child(1),#p1>:nth-child(4),#p2>:nth-child(1),#p2>:nth-child(3){grid-column:span 7}
+#p1>:nth-child(2),#p1>:nth-child(3),#p2>:nth-child(2),#p2>:nth-child(4){grid-column:span 5}
+.part>:nth-child(5){grid-column:span 12}
+@media(max-width:900px){.part>.card{grid-column:span 12!important}}
+.card{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px;min-width:0;transition:all .3s ease-out}
+.card:hover{transform:translateY(-4px);border-color:rgba(165,180,252,.3);background:rgba(255,255,255,.055);box-shadow:0 16px 48px -16px rgba(99,102,241,.4)}
+h2{font-size:16px;margin:0 0 14px;color:#fafafa;font-weight:600;letter-spacing:-.02em;display:flex;gap:10px;align-items:center}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 14px;margin-bottom:8px;align-items:center}
+label{font-size:12px;color:#a1a1aa;display:flex;flex-direction:column;min-width:130px;flex:1}
+label b,.out b,.out i{font-variant-numeric:tabular-nums;font-style:normal;color:#fafafa}
+input[type=range]{width:100%;accent-color:#60a5fa}
+canvas{width:100%;aspect-ratio:8/3;background:rgba(9,9,11,.7);border:1px solid rgba(255,255,255,.06);border-radius:12px;display:block;margin:6px 0 10px}
+.out{font-size:13px;font-variant-numeric:tabular-nums;color:#a1a1aa;min-height:20px}
+.c1{color:#f87171!important}.c2{color:#60a5fa!important}.c3{color:#4ade80!important}
+.tg{margin-top:8px;background:none;border:1px dashed rgba(245,158,11,.5);color:#fbbf24;border-radius:8px;padding:5px 10px;font:inherit;font-size:12px;cursor:pointer}
+.scr{display:none;margin-top:8px;background:#1a1b20;border-left:3px solid #f59e0b;padding:8px 12px;font-size:13px;border-radius:0 8px 8px 0}
+.scr.on{display:block}
+.tg{transition:all .3s ease-out}.tg:hover{transform:translateY(-2px);box-shadow:0 6px 24px -8px rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+.scr{border-radius:0 12px 12px 0;background:rgba(255,255,255,.04);color:#c4c4cc}
+</style></head><body>
+<header><h1><svg class="ic" viewBox="0 0 24 24"><path d="M2 12c3-6 5-6 8 0s5 6 8 0 4-3 4-3"/></svg>Physics Lab</h1>
+<button class="tab on" onclick="tab(1,this)">Part 1：波動與聲學</button>
+<button class="tab" onclick="tab(2,this)">Part 2：幾何光學</button></header>
+<section class="hero"><div class="pill"><svg class="ic" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>波動・聲學・幾何光學</div><h2>看得見的物理，<br>零死背的互動課堂</h2><p>拖曳拉桿、即時代入公式，搭配講師白話帶課小抄，讓助教與學員一眼看懂物理意義。</p></section>
+<main><div class="part" id="p1"></div><div class="part" id="p2" hidden></div></main>
+<script>
+const $=i=>document.getElementById(i),V=i=>+$(i).value,S={},g=k=>S[k]||0,PI=Math.PI;
+const sl=(id,l,a,b,v,s=1,u='')=>`<label>${l}：<span><b id="${id}o">${v}</b>${u}</span><input type="range" id="${id}" min="${a}" max="${b}" step="${s}" value="${v}"></label>`;
+const bt=(id,arr)=>arr.map((t,i)=>`<button class="b${i?'':' on'}" data-g="${id}" data-i="${i}">${t}</button>`).join('');
+document.addEventListener('input',e=>{const o=$(e.target.id+'o');if(o)o.textContent=e.target.value});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;S[b.dataset.g]=+b.dataset.i;document.querySelectorAll(`[data-g="${b.dataset.g}"]`).forEach(x=>x.classList.toggle('on',x===b))});
+function tab(n,b){$('p1').hidden=n!=1;$('p2').hidden=n!=2;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b))}
+function card(p,id,t,ctrl,cn,sc){$(p).insertAdjacentHTML('beforeend',`<section class="card"><h2>${ico(id)}${t}</h2><div class="ctrl">${ctrl}</div>${Array.from({length:cn},(_,i)=>`<canvas id="${id}c${i}" width="1280" height="480"></canvas>`).join('')}<div class="out" id="${id}r"></div><button class="tg" onclick="this.nextElementSibling.classList.toggle('on')">💡 講師白話帶課小抄</button><div class="scr">${sc}</div></section>`)}
+const X=i=>{const c=$(i);if(!c||!c.offsetParent)return null;const x=c.getContext('2d');x.setTransform(2,0,0,2,0,0);x.clearRect(0,0,640,240);return x};
+const ln=(x,a,b,c,d,col='#fff',w=1.5,da=[])=>{x.strokeStyle=col;x.lineWidth=w;x.setLineDash(da);x.beginPath();x.moveTo(a,b);x.lineTo(c,d);x.stroke();x.setLineDash([])};
+const tx=(x,s,a,b,col='#a1a1aa',sz=11,al='left')=>{x.fillStyle=col;x.font=sz+'px Inter,"Noto Sans TC",sans-serif';x.textAlign=al;x.fillText(s,a,b)};
+const dot=(x,a,b,r,col)=>{x.fillStyle=col;x.beginPath();x.arc(a,b,r,0,7);x.fill()};
+const arr=(x,a,b,c,d,col,da=[])=>{ln(x,a,b,c,d,col,2,da);const t=Math.atan2(d-b,c-a);x.fillStyle=col;x.beginPath();x.moveTo(c,d);x.lineTo(c-8*Math.cos(t-.4),d-8*Math.sin(t-.4));x.lineTo(c-8*Math.cos(t+.4),d-8*Math.sin(t+.4));x.fill()};
+const f1=(n,d=1)=>(+n).toFixed(d);
+const IC={m1:'<path d="M2 12c3-6 5-6 8 0s5 6 8 0 4-3 4-3"/>',m2:'<path d="M3 12h4l2-6 4 12 2-6h6"/>',m3a:'<path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0z"/>',m3b:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',m4:'<path d="M4 12h16M16 8l4 4-4 4M8 8l-4 4 4 4"/>',m5:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/>',m6a:'<path d="M3 20h18M5 4l7 16M19 4l-7 16"/>',m6b:'<path d="M7 4c9 3 9 13 0 16"/><path d="M3 12h8"/>',m7:'<path d="M3 10h18M7 3l5 7 3 11"/>',m8:'<path d="M12 3c5 4 5 14 0 18-5-4-5-14 0-18z"/><path d="M3 12h18"/>'};
+const ico=id=>`<svg class="ic" viewBox="0 0 24 24">${IC[id]||''}</svg>`;
+let play1=1,T1=0,T2=0,T3=0,P4=0,play4=0;
+
+/* ===== Part 1 ===== */
+card('p1','m1','模組 1：橫波與縱波——粒子到底有沒有跟著跑？',bt('m1',['橫波（高低波）','縱波（疏密波）'])+`<button class="b" onclick="play1=!play1;this.textContent=play1?'⏸ 暫停':'▶ 播放'">⏸ 暫停</button>`,1,
+'<b>帶法：</b>請學員只盯著「紅點」看三秒。問：紅點有往右跑嗎？（沒有！）<br><b>重點：</b>波傳遞的是「能量」，介質只在原地振動。<br><b>陷阱：</b>「水波會把樹葉沖到岸邊」是錯的——樹葉只會原地上下。橫波＝振動方向⊥傳播方向；縱波＝振動方向∥傳播方向。<br><b>口訣：</b>橫垂直、縱平行；波走能量、粒子不走。');
+function d1(){const x=X('m1c0');if(!x)return;const w=2.4,tr=!g('m1');
+if(tr){x.strokeStyle='#60a5fa';x.lineWidth=2;x.beginPath();for(let i=20;i<=620;i+=4){const y=120+30*Math.sin(.05*i-w*T1);i==20?x.moveTo(i,y):x.lineTo(i,y)}x.stroke();
+for(let i=20;i<=620;i+=30)dot(x,i,120+30*Math.sin(.05*i-w*T1),3,'#52525b');
+const ry=120+30*Math.sin(.05*320-w*T1);ln(x,320,45,320,195,'#f87171',1,[4,4]);arr(x,320,ry,320,ry-22*Math.sign(Math.cos(.05*320-w*T1)||1)*-1,'#f87171');dot(x,320,ry,6,'#ef4444');tx(x,'紅點：只上下振動',330,40,'#f87171',12)}
+else{for(let r=0;r<3;r++)for(let i=0;i<40;i++){const x0=20+i*15,dx=7*Math.sin(.21*x0-w*T1),mid=r==1&&i==20;if(mid){ln(x,x0,60,x0,180,'#f87171',1,[4,4]);dot(x,x0+dx,120,6,'#ef4444')}else dot(x,x0+dx,90+r*30,3,'#71717a')}
+ln(x,300,150,340,150,'#f87171',2);tx(x,'紅點：只左右來回振動',330,40,'#f87171',12);tx(x,'密',20,200,'#60a5fa');tx(x,'← 疏密相間，疏密區往右傳',60,200,'#60a5fa')}
+tx(x,'波前進方向 →',620,18,'#a1a1aa',12,'right');
+$('m1r').innerHTML=tr?'橫波：紅點 <i class="c1">x 座標不變</i>，只有高度變 → 介質不會隨波前進。':'縱波：紅點在原位附近左右擺，疏密區域才是往右跑的東西。'}
+
+const M2=[['軟繩',6],['硬繩',12],['水波',3]];
+card('p1','m2','模組 2：週期波公式 v = f × λ',bt('m2',['軟繩 v=6','硬繩 v=12','水波 v=3'])+sl('m2f','頻率 f',1,6,2,.5,' Hz')+sl('m2a','振幅 A',5,50,30,1),1,
+'<b>帶法：</b>先選「軟繩」，把 f 從小拉到大，請學員看紅色 λ 括號怎麼變。<br><b>破除迷思：</b>f 變大，v 不會變！v 只由「介質」決定，所以 λ 只好變短（v＝f×λ，v 固定 → f 與 λ 成反比）。<br><b>陷阱：</b>換介質（按鈕）v 才會變；頻率只由波源決定，進入新介質時 f 不變、λ 改變。<br><b>口訣：</b>甩越快、波越擠；波速看介質，頻率看手。T＝1/f。');
+function d2(){const x=X('m2c0');if(!x)return;const [n,v]=M2[g('m2')],f=V('m2f'),A=V('m2a'),lam=v/f,L=lam*40;
+x.strokeStyle='#60a5fa';x.lineWidth=2;x.beginPath();for(let i=20;i<=620;i+=3){const y=110-A*Math.sin(2*PI*((i-20)/L-f*T2*.2));i==20?x.moveTo(i,y):x.lineTo(i,y)}x.stroke();
+ln(x,20,205,Math.min(20+L,620),205,'#f87171',3);tx(x,'λ = '+f1(lam,2)+' m',24,224,'#f87171',12);
+$('m2r').innerHTML=`v = f × λ → <i class="c1">${v}</i> = <i class="c2">${f}</i> × <i class="c3">${f1(lam,2)}</i>　|　T = 1/f = <i>${f1(1/f,2)}</i> s<br>目前介質「${n}」：v 固定 ${v} m/s，只調 f → λ 反比變化。`}
+
+card('p1','m3a','模組 3A：聲速與溫度 v = 331 + 0.6T',sl('m3t','氣溫 T',0,40,15,1,' °C'),1,
+'<b>帶法：</b>拖溫度拉桿，看空氣聲速一格一格變；再看下面橫條。<br><b>重點：</b>固體 ＞ 液體 ＞ 氣體 ＞ 真空（0，聲音需要介質）。<br><b>陷阱：</b>題目若給「15°C」，要用 331+0.6×15＝340 m/s；題目沒給溫度才用預設 340。聲速與音調、響度無關。<br><b>口訣：</b>一度加 0.6，越熱越快；越硬越快，真空沒聲。');
+function d3a(){const x=X('m3ac0');if(!x)return;const T=V('m3t'),va=331+.6*T,B=[['固體（鋼）',5000,'#f59e0b'],['液體（水）',1500,'#60a5fa'],['氣體（空氣）',va,'#4ade80'],['真空',0,'#71717a']];
+B.forEach((b,i)=>{const y=30+i*48,w=Math.max(b[1]/5000*400,b[1]>0?3:0);x.fillStyle=b[2];x.fillRect(150,y,w,26);tx(x,b[0],140,y+17,'#d4d4d8',12,'right');tx(x,f1(b[1],b[1]%1?1:0)+' m/s',158+w,y+17,'#fafafa',12)});
+$('m3ar').innerHTML=`v = 331 + 0.6 × ${T} = 331 + ${f1(.6*T)} = <i class="c3">${f1(va)}</i> m/s`}
+
+const TB=[[1],[1,.5,.3,.2],[1,.5,.33,.25,.2]];
+card('p1','m3b','模組 3B：聲音三要素示波器',sl('m3l','響度（大小聲）',30,100,60,1,' dB')+sl('m3p','音調（高低音）',100,1000,300,10,' Hz')+bt('m3b',['音叉（純音）','鋼琴','小提琴']),1,
+'<b>帶法：</b>一次只動一支拉桿，問學員「哪個特徵變了？」<br>響度→振幅（高度）；音調→頻率（疏密）；音色→波形（形狀）。<br><b>陷阱：</b>音量大≠音調高；同一音調的鋼琴與小提琴，頻率相同但波形不同，所以聽起來不一樣。<br><b>口訣：</b>大小看高度，高低看疏密，音色看形狀。');
+function d3b(){const x=X('m3bc0');if(!x)return;const A=8+(V('m3l')-30)/70*52,cyc=1.5+(V('m3p')-100)/900*10,h=TB[g('m3b')],nm=Math.sqrt(h.reduce((s,a)=>s+a*a,0));
+ln(x,20,120,620,120,'#3f3f46',1,[3,3]);x.strokeStyle='#4ade80';x.lineWidth=2;x.beginPath();for(let i=20;i<=620;i+=2){let y=0;h.forEach((a,k)=>y+=a*Math.sin(2*PI*(k+1)*cyc*(i-20)/600-T3*3));y=120-A*y/nm*1.0;i==20?x.moveTo(i,y):x.lineTo(i,y)}x.stroke();
+$('m3br').innerHTML=`響度 <i class="c1">${V('m3l')} dB</i> → 振幅 ${f1(A,0)}　|　音調 <i class="c2">${V('m3p')} Hz</i> → 每格約 ${f1(cyc,1)} 個波　|　音色 <i class="c3">${['音叉','鋼琴','小提琴'][g('m3b')]}</i>`}
+
+card('p1','m4','模組 4：回音計算「折返跑線段」',bt('m4',['① 原地不動','② 邊前進邊鳴笛','③ 邊後退邊鳴笛'])+sl('m4v','聲速 v聲',300,360,340,1,' m/s')+sl('m4b','船速 v船（②③用）',0,40,20,1,' m/s')+sl('m4t','經過時間 t',1,6,4,.5,' 秒')+`<button class="b" onclick="P4=0;play4=1">▶ 慢動作播放</button>`+sl('m4p','動畫進度',0,100,0,1,'%'),2,
+'<b>帶法：</b>先放①：聲音去回＝2 倍距離，所以 d＝v×t÷2。再放②：請學員看下面線段——紅（聲音）＋藍（船）剛好湊滿 2d。③則是紅−藍＝2d。<br><b>陷阱：</b>②問「聽到回音時船離山壁多遠」要用 d−v船t；問「鳴笛時」才是 d。別忘了先確認題目問的是哪一刻。<br><b>口訣：</b>靠近相加、遠離相減，等於 2 倍距離。');
+function d4(){const x=X('m4c0'),y=X('m4c1');if(!x)return;const m=g('m4'),vs=V('m4v'),vb=m?V('m4b'):0,t=V('m4t'),d0=m==0?vs*t/2:m==1?(vs+vb)*t/2:(vs-vb)*t/2,eD=m==0?d0:m==1?d0-vb*t:d0+vb*t;
+const sc=500/Math.max(d0,eD,1),tau=P4*t,x0=610-d0*sc,dir=m==1?1:m==2?-1:0,bx=x0+dir*vb*tau*sc,s=vs*tau,sx=s<=d0?x0+s*sc:610-(s-d0)*sc;
+x.fillStyle='#1e3a5f';x.fillRect(0,150,640,90);x.fillStyle='#71717a';x.fillRect(610,40,30,200);tx(x,'山壁',625,32,'#a1a1aa',11,'center');
+x.fillStyle='#fbbf24';x.fillRect(bx-14,128,28,18);tx(x,'🚢',bx,126,'#fff',18,'center');
+ln(x,x0,100,Math.min(sx,s<=d0?sx:610),100,'#f87171',2);if(s>d0)ln(x,610,110,sx,110,'#f87171',2,[4,3]);dot(x,sx,s<=d0?100:110,5,'#ef4444');
+ln(x,x0,170,x0,200,'#a1a1aa',1);tx(x,'鳴笛處',x0,214,'#a1a1aa',10,'center');tx(x,'d = '+f1(d0,0)+' m',(x0+610)/2,60,'#fafafa',12,'center');
+const M=Math.max(vs*t,2*d0),k=560/M,R=vs*t*k,Bw=vb*t*k,D=2*d0*k;
+y.fillStyle='#f87171';y.fillRect(40,30,R,22);tx(y,'聲音走的路 v聲×t = '+f1(vs*t,0)+' m',44,46,'#09090B',12);
+if(m){y.fillStyle='#60a5fa';y.fillRect(40,75,Bw,22);tx(y,'船走的路 v船×t = '+f1(vb*t,0)+' m',44+Bw+6,91,'#60a5fa',12)}
+if(m==1){y.fillStyle='#f87171';y.fillRect(40,125,R,22);y.fillStyle='#60a5fa';y.fillRect(40+R,125,Bw,22);ln(y,40,160,40+D,160,'#fafafa',2);tx(y,'紅＋藍＝2×d = '+f1(2*d0,0)+' m',40,185,'#fafafa',13)}
+else if(m==2){y.fillStyle='#e4e4e7';y.fillRect(40,125,D,22);tx(y,'2×d',44,141,'#09090B',12);y.fillStyle='#60a5fa';y.fillRect(40+D,125,Bw,22);ln(y,40,160,40+R,160,'#f87171',2);tx(y,'紅－藍＝2×d = '+f1(2*d0,0)+' m',40,185,'#fafafa',13)}
+else{y.fillStyle='#e4e4e7';y.fillRect(40,125,D,22);tx(y,'來回 = 2×d = '+f1(2*d0,0)+' m',44,141,'#09090B',12)}
+const e=m==0?`d = (v×t)/2 = (${vs}×${t})/2 = <i class="c1">${f1(d0,0)}</i> m`:m==1?`鳴笛時距離 d = (v聲＋v船)×t/2 = (${vs}＋${vb})×${t}/2 = <i class="c1">${f1(d0,0)}</i> m；聽到回音時 = d − v船×t = ${f1(d0,0)} − ${f1(vb*t,0)} = <i class="c2">${f1(eD,0)}</i> m`:`鳴笛時距離 d = (v聲－v船)×t/2 = (${vs}－${vb})×${t}/2 = <i class="c1">${f1(d0,0)}</i> m；聽到回音時 = d + v船×t = ${f1(d0,0)} ＋ ${f1(vb*t,0)} = <i class="c2">${f1(eD,0)}</i> m`;
+$('m4r').innerHTML=e+`<br>動畫時間 ${f1(tau,1)} / ${t} 秒`}
+
+/* ===== Part 2 ===== */
+card('p2','m5','模組 5：光的直進與針孔成像',sl('m5p','物距（蠟燭→針孔）',80,250,130,1,' cm')+sl('m5q','像距（針孔→紙屏）',50,180,90,1,' cm')+sl('m5h','針孔大小',1,20,3,1),1,
+'<b>帶法：</b>問「燭頂的光走哪條線？」→ 直線穿過針孔打到紙屏下方，所以上下顛倒（左右也相反）。<br><b>重點：</b>像高 ÷ 物高 ＝ 像距 ÷ 物距。像距拉大→像變大；物距拉大→像變小。<br><b>陷阱：</b>針孔變大→更亮但更模糊（每個點變成一個光圈）；針孔小→清楚但暗。成像是「實像」，可用紙屏接。<br><b>口訣：</b>光走直線，倒立實像；孔大亮糊、孔小暗清。');
+function d5(){const x=X('m5c0');if(!x)return;const p=V('m5p'),q=V('m5q'),h=V('m5h'),r=h/2,xp=50+p,xs=xp+q,hi=40*q/p,al=Math.min(1,.3+h/20*.7);
+ln(x,20,120,620,120,'#27272a',1,[3,3]);x.fillStyle='#52525b';x.fillRect(xp-3,20,6,100-r);x.fillRect(xp-3,120+r,6,100-r);ln(x,xs,20,xs,220,'#e4e4e7',3);
+x.fillStyle='#e4e4e7';x.fillRect(46,120,8,0);x.fillStyle='#fcd34d';x.fillRect(44,80,12,40);dot(x,50,74,5,'#f97316');tx(x,'燭',50,136,'#a1a1aa',10,'center');
+const ye=(rr)=>80+(40+rr)*(xs-50)/p;x.fillStyle='rgba(251,191,36,.18)';x.beginPath();x.moveTo(50,80);x.lineTo(xs,80+(40-r)*(xs-50)/p);x.lineTo(xs,ye(r)<0?0:80+(40+r)*(xs-50)/p);x.fill();
+ln(x,50,80,xs,80+40*(xs-50)/p,'#fbbf24',1.5);ln(x,50,120,xs,120,'#fbbf24',1.5);
+x.save();x.shadowColor='#fb923c';x.shadowBlur=h*(1+q/p)*.6;x.globalAlpha=al;x.fillStyle='#fcd34d';x.fillRect(xs-6,120,12,hi);dot(x,xs,120+hi+6,5,'#f97316');x.restore();
+tx(x,'倒立實像',xs-10,215,'#fcd34d',11,'right');tx(x,'物距 '+p,50+p/2,236,'#a1a1aa',10,'center');tx(x,'像距 '+q,xp+q/2,236,'#a1a1aa',10,'center');
+$('m5r').innerHTML=`像高 = 物高 × 像距/物距 = 40 × ${q}/${p} = <i class="c1">${f1(hi)}</i>（倒立）　|　孔徑 ${h}：${h>10?'<i class="c2">較亮但模糊</i>':h<4?'<i class="c3">清楚但較暗</i>':'亮度與清晰度適中'}`}
+
+card('p2','m6a','模組 6A：反射定律',sl('m6i','入射角 θi',0,80,35,1,'°'),1,
+'<b>帶法：</b>請學員先畫虛線「法線」（垂直鏡面），再量角。<br><b>重點：</b>θi＝θr，且入射線、反射線、法線在同一平面。<br><b>陷阱（最常錯）：</b>角度是跟「法線」的夾角，不是跟鏡面的夾角！題目給「與鏡面夾 30°」→ 入射角是 60°。<br><b>口訣：</b>角度找法線，入射等反射。');
+function d6a(){const x=X('m6ac0');if(!x)return;const a=V('m6i'),r=a*PI/180,L=130,ox=320,oy=185;
+x.fillStyle='#27272a';x.fillRect(120,oy,400,6);for(let i=130;i<520;i+=12)ln(x,i,oy+6,i-8,oy+14,'#52525b',1);
+ln(x,ox,oy,ox,25,'#a1a1aa',1,[5,4]);tx(x,'法線',ox+6,32,'#a1a1aa');
+const ix=ox-L*Math.sin(r),iy=oy-L*Math.cos(r),rx=ox+L*Math.sin(r);arr(x,ix,iy,ox,oy,'#f87171');arr(x,ox,oy,rx,iy,'#60a5fa');
+x.strokeStyle='#f87171';x.lineWidth=1.5;x.beginPath();x.arc(ox,oy,50,-PI/2-r,-PI/2);x.stroke();x.strokeStyle='#60a5fa';x.beginPath();x.arc(ox,oy,62,-PI/2,-PI/2+r);x.stroke();
+tx(x,'θi',ox-44,oy-62,'#f87171',12);tx(x,'θr',ox+36,oy-70,'#60a5fa',12);
+x.strokeStyle='#52525b';x.setLineDash([2,3]);x.beginPath();x.arc(ox,oy,90,-PI-0,-PI/2-r,false);x.stroke();x.setLineDash([]);
+tx(x,'❌ 與鏡面的夾角 '+(90-a)+'° 不是入射角',16,18,'#fbbf24',12);
+$('m6ar').innerHTML=`入射角 θi = <i class="c1">${a}°</i>　→　反射角 θr = <i class="c2">${a}°</i>　（與鏡面夾角 = 90° − ${a}° = ${90-a}°）`}
+
+card('p2','m6b','模組 6B：平面鏡・凸面鏡・凹面鏡',bt('m6b',['平面鏡','凸面鏡','凹面鏡'])+sl('m6u','物距 u',30,260,150,1),1,
+'<b>帶法：</b>先放平面鏡：虛像在鏡後、物距＝像距。再切凸面鏡（山路反射鏡）：永遠縮小正立虛像，所以視野廣。最後凹面鏡：u 拉過焦點（F）前後，看像怎麼翻轉。<br><b>陷阱：</b>平面鏡「左右相反」不是「上下相反」；虛像都不能用紙屏接。<br><b>口訣：</b>凸面發散看得廣；凹面會聚能聚光，焦內變放大鏡。');
+function d6b(){const x=X('m6bc0');if(!x)return;const ty=g('m6b'),u=V('m6u'),F=[1e6,-80,80][ty],v=F*u/(u-F),mx=500,ox=mx-u,close=Math.abs(u-F)<1.5&&ty==2;
+ln(x,20,120,620,120,'#27272a',1,[3,3]);x.strokeStyle='#e4e4e7';x.lineWidth=3;x.beginPath();
+if(ty==0){x.moveTo(mx,40);x.lineTo(mx,200)}else{const s=ty==2?1:-1;x.moveTo(mx-s*14,45);x.quadraticCurveTo(mx+s*14,120,mx-s*14,195)}x.stroke();
+if(ty){dot(x,mx-F,120,3,'#fbbf24');tx(x,'F',mx-F,138,'#fbbf24',11,'center')}
+arr(x,ox,120,ox,80,'#4ade80');tx(x,'物',ox,136,'#4ade80',11,'center');
+ln(x,ox,80,mx,80,'#fbbf24',1.5);ln(x,ox,80,mx,120,'#fbbf24',1.5);
+let txt;
+if(close)txt='物在焦點上：反射光平行射出，不成像';
+else{const m=-v/u,iy=120-m*40,ix=mx-v,real=v>0;
+[[80],[120]].forEach(([hy])=>{if(real)ln(x,mx,hy,ix,iy,'#f87171',1.5);else{const dx=mx-ix,dy=hy-iy,k=(mx-60)/Math.abs(dx);ln(x,mx,hy,mx-Math.abs(dx)*k,hy+dy*k,'#f87171',1.5);ln(x,mx,hy,ix,iy,'#f87171',1.2,[4,4])}});
+if(ix>-40&&ix<700)arr(x,ix,120,ix,iy,'#f472b6',real?[]:[4,3]);
+const sz=Math.abs(m)>1.03?'放大':Math.abs(m)<.97?'縮小':'等大';txt=`${m>0?'正立':'倒立'}${sz}${real?'實':'虛'}像${real?'（可用紙屏接）':'（不能用紙屏接）'}　像距 ${f1(Math.abs(v),0)}　放大率 ${f1(Math.abs(m),2)}`}
+$('m6br').innerHTML=['平面鏡：','凸面鏡：','凹面鏡：'][ty]+`<i class="c3">${txt}</i>`+(ty==0?'　（物距 = 像距）':'')}
+
+card('p2','m7','模組 7：光的折射與水中的魚',bt('m7',['空氣 → 水','水 → 空氣'])+sl('m7a','入射角',0,80,40,1,'°')+sl('m7d','魚的實際深度',40,110,80,1),2,
+'<b>帶法：</b>「空氣→水」：光進入較「重」的介質，折向法線（折射角較小）；「水→空氣」：偏離法線；角度超過約 49° 會發生全反射。<br><b>水中的魚：</b>人看到的魚比實際淺（視深＝實深÷1.33）。<br><b>陷阱：</b>叉魚要叉「看到的魚的下方」；潛水員看岸上的人則覺得人變高。<br><b>口訣：</b>入水靠法線，出水離法線；看魚變淺、叉要往下。');
+function d7(){const x=X('m7c0');if(!x)return;const n=1.33,w=g('m7'),a=V('m7a'),r1=a*PI/180,ox=320,oy=120,L=105;x.fillStyle='rgba(56,114,200,.18)';x.fillRect(0,oy,640,120);ln(x,0,oy,640,oy,'#60a5fa',1.5);ln(x,ox,15,ox,225,'#a1a1aa',1,[5,4]);
+const sg=w?1:-1,s2=w?n*Math.sin(r1):Math.sin(r1)/n;let msg;
+arr(x,ox-L*Math.sin(r1),oy+sg*L*Math.cos(r1),ox,oy,'#f87171');
+if(s2>1){arr(x,ox,oy,ox+L*Math.sin(r1),oy+sg*L*Math.cos(r1),'#fbbf24');msg='<i class="c1">全反射！</i>（入射角超過臨界角約 49°，光全部反射回水中）'}
+else{const r2=Math.asin(s2);arr(x,ox,oy,ox+L*s2,oy-sg*L*Math.cos(r2),'#60a5fa');msg=`折射角 = <i class="c2">${f1(r2*180/PI,1)}°</i>（${w?'偏離法線':'偏向法線'}）`;tx(x,'θ2',ox+14,oy-sg*40,'#60a5fa',11)}
+tx(x,'空氣',10,20,'#a1a1aa',12);tx(x,'水',10,230,'#60a5fa',12);tx(x,'θ1',ox-30,oy+sg*40,'#f87171',11);
+$('m7r').innerHTML=`入射角 = ${a}°　${msg}`;
+const y=X('m7c1');if(!y)return;const d=V('m7d'),da=d/n,ex=420,ey=40,fx=200,xs=fx+(ex-fx)*da/(da+80);
+y.fillStyle='rgba(56,114,200,.18)';y.fillRect(0,120,640,120);ln(y,0,120,640,120,'#60a5fa',1.5);
+tx(y,'🐟',fx,120+d+8,'#fff',22,'center');tx(y,'實際位置（實深 '+d+'）',fx+20,120+d+8,'#f87171',11);
+tx(y,'🐟',fx,120+da+8,'#fff',22,'center');y.globalAlpha=.5;y.globalAlpha=1;tx(y,'看到的位置（視深 '+f1(da,0)+'）',fx+20,120+da-6,'#a1a1aa',11);
+ln(y,fx,120+d,xs,120,'#f87171',1.5);ln(y,xs,120,ex,ey,'#f87171',1.5);ln(y,xs,120,fx,120+da,'#a1a1aa',1.2,[4,4]);tx(y,'👁',ex,ey,'#fff',20,'center');
+$('m7r').innerHTML+=`<br>視深 = 實深 ÷ 1.33 = ${d} ÷ 1.33 = <i class="c3">${f1(da)}</i>　→ 看起來比較淺，叉魚要往下叉。`}
+
+card('p2','m8','模組 8：凸透鏡與凹透鏡光路追蹤',bt('m8',['凸透鏡（會聚）','凹透鏡（發散）'])+sl('m8p','物距 p',30,280,200,1),1,
+'<b>帶法：</b>先畫三條線：①平行主軸→過焦點 ②過鏡心→直進 ③過焦點→平行主軸。交點就是像。<br><b>陷阱：</b>2F 是「實像大小」的分界、F 是「實像／虛像」的分界；成像於 F 時不成像。虛像用虛線，且不能用紙屏接。<br><b>口訣：</b>凸透鏡「2F 分大小、F 分虛實」；越靠近焦點，像越遠、越大；凹透鏡不管放哪，永遠是正立縮小虛像。');
+function d8(){const x=X('m8c0');if(!x)return;const cv=!g('m8'),p=V('m8p'),f=cv?80:-80,ox=320,tipY=80,q=f*p/(p-f),ix=ox+q,iy=120+q/p*40,real=q>0&&cv,none=cv&&Math.abs(p-f)<1.5;
+ln(x,10,120,630,120,'#27272a',1);[[-160,'2F'],[-80,'F'],[80,'F'],[160,'2F']].forEach(([d,l])=>{dot(x,ox+d,120,3,'#fbbf24');tx(x,l,ox+d,138,'#fbbf24',11,'center')});tx(x,'O',ox,138,'#e4e4e7',11,'center');
+ln(x,ox,25,ox,215,'#a1a1aa',2);[[25,1],[215,-1]].forEach(([yy,k])=>{const o=(cv?1:-1)*k*8;ln(x,ox,yy,ox-8,yy+o,'#a1a1aa',2);ln(x,ox,yy,ox+8,yy+o,'#a1a1aa',2)});
+const ox0=ox-p;arr(x,ox0,120,ox0,tipY,'#4ade80');tx(x,'物',ox0,136,'#4ade80',11,'center');
+const T=[ox0,tipY],h1=[ox,tipY],fb=[ox+f,120];
+ln(x,T[0],T[1],ox,tipY,'#fbbf24',1.3);
+const dd=cv?[fb[0]-h1[0],fb[1]-h1[1]]:[h1[0]-fb[0],h1[1]-fb[1]],kk=(620-ox)/dd[0];
+if(!none)ln(x,ox,tipY,620,tipY+dd[1]*kk,'#fbbf24',1.3);else ln(x,ox,tipY,620,tipY+dd[1]*kk,'#fbbf24',1.3);
+ln(x,ox0,tipY,620,120+(tipY-120)*(-(620-ox))/p*-1*-1,'#60a5fa',1.3);
+const y3=tipY+40*p/(p-f);if(y3>10&&y3<230){ln(x,ox0,tipY,ox,y3,'#f472b6',1.3);ln(x,ox,y3,620,y3,'#f472b6',1.3)}
+if(!none&&q<0||(!cv)){ln(x,ox,tipY,ix,iy,'#fbbf24',1.1,[4,4]);if(y3>10&&y3<230)ln(x,ox,y3,ix,iy,'#f472b6',1.1,[4,4])}
+let txt;
+if(none)txt='物在焦點 F 上：光平行射出，<i class="c1">不成像</i>';
+else{if(ix>-60&&ix<760){arr(x,ix,120,ix,iy,'#f87171',real?[]:[4,3]);if(real&&ix<630)ln(x,ix,20,ix,220,'rgba(228,228,231,.35)',3)}
+const m=Math.abs(q/p),sz=Math.abs(m-1)<.03?'等大':m>1?'放大':'縮小';txt=`<i class="c1">${real?'倒立':'正立'}${sz}${real?'實':'虛'}像</i>　${real?'✅ 可用紙屏接住':'❌ 不能用紙屏接'}　（像距 q = ${f1(Math.abs(q),0)}，放大率 ${f1(m,2)}）`}
+$('m8r').innerHTML=`${cv?'凸透鏡':'凹透鏡'} f=80，物距 p=<i>${p}</i>：${txt}<br>${cv?'口訣：2F 分大小、F 分虛實；越靠近焦點像越遠越大。':'口訣：凹透鏡永遠是正立縮小虛像。'}`}
+
+let last=performance.now();
+function loop(n){const dt=Math.min(.05,(n-last)/1e3);last=n;if(play1)T1+=dt;T2+=dt;T3+=dt;
+if(play4){P4=Math.min(1,P4+dt/6);if(P4>=1)play4=0;$('m4p').value=P4*100;$('m4po').textContent=Math.round(P4*100)}
+[d1,d2,d3a,d3b,d4,d5,d6a,d6b,d7,d8].forEach(f=>f());requestAnimationFrame(loop)}
+$('m4p').oninput=e=>{P4=e.target.value/100;play4=0};
+requestAnimationFrame(loop);
+</script></body></html>
